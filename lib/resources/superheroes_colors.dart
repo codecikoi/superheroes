@@ -5,4 +5,6 @@ class SuperheroesColors {
 
   static const background = Color(0xff10141e);
   static const blue = Color(0xff00bcd4);
+  static const cardBackground = Color(0xff2C3243);
+
 }
