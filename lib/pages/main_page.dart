@@ -75,6 +75,7 @@ class MainPageStateWidget extends StatelessWidget {
               return LoadingIndicator();
             case MainPageState.noFavorites:
             case MainPageState.minSymbols:
+              return MinText();
             case MainPageState.nothingFound:
             case MainPageState.loadingError:
             case MainPageState.searchResults:
@@ -105,6 +106,28 @@ class LoadingIndicator extends StatelessWidget {
         child: CircularProgressIndicator(
           color: SuperheroesColors.blue,
           strokeWidth: 4.0,
+        ),
+      ),
+    );
+  }
+}
+
+class MinText extends StatelessWidget {
+  const MinText({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 110.0,
+        ),
+        child: Text(
+          'Enter at least 3 symbols',
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
       ),
     );
