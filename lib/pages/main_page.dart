@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:superheroes/widgets/supeerhero_card.dart';
 
 import '../bloc/main_bloc.dart';
 import '../resources/superheroes_colors.dart';
@@ -220,84 +221,24 @@ class FavoritesContent extends StatelessWidget {
         SizedBox(height: 20.0),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: SuperheroesColors.cardBackground,
-            ),
-            child: Row(
-              children: [
-                Image.network(
-                  'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
-                  width: 70.0,
-                  height: 70.0,
-                  alignment: Alignment.topLeft,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'batman'.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    Text(
-                      'Bruce Wayne',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          child: SuperheroCard(
+            name: 'batman',
+            realName: 'Bruce Wayne',
+            imageUrl:
+                'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
           ),
         ),
         SizedBox(height: 8.0),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: SuperheroesColors.cardBackground,
-            ),
-            child: Row(
-              children: [
-                Image.network(
-                  'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
-                  width: 70.0,
-                  height: 70.0,
-                  alignment: Alignment.topLeft,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'ironman'.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    Text(
-                      'Tony Stark',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          child: SuperheroCard(
+            name: 'ironman',
+            realName: 'Tony Stark',
+            imageUrl:
+            'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
           ),
         ),
-        ],
+      ],
     );
   }
 }
