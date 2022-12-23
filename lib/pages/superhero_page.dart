@@ -15,22 +15,29 @@ class SuperheroPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: SuperheroesColors.background,
       body: SafeArea(
-        child: Center(
-          child: Text(
-            name,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 20.0,
+        child: Stack(
+          children: [
+            Center(
+              child: Text(
+                name,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20.0,
+                ),
+              ),
             ),
-          ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ActionButton(
+                text: 'back',
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: ActionButton(
-        text: 'back',
-        onTap: () {
-          Navigator.pop(context);
-        },
       ),
     );
   }
