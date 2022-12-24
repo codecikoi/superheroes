@@ -12,9 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.openSansTextTheme(
-          Theme.of(context).textTheme,
-        ),
+        textTheme: GoogleFonts.openSansTextTheme(),
       ),
       home: MainPage(),
     );
