@@ -4,7 +4,7 @@ import 'package:network_image_mock/network_image_mock.dart';
 import 'package:superheroes/bloc/main_bloc.dart';
 import 'package:superheroes/main.dart';
 import 'package:superheroes/pages/main_page.dart';
-import 'package:superheroes/widgets/supeerhero_card.dart';
+import 'package:superheroes/widgets/superhero_card.dart';
 import 'shared.dart';
 import 'shared/internal/container_checks.dart';
 import 'shared/internal/finders.dart';
