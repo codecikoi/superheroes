@@ -1,15 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'test_lesson_1_task_1.dart';
-import 'test_lesson_1_task_2.dart';
-import 'test_lesson_1_task_3.dart';
-import 'test_lesson_1_task_4.dart';
-import 'test_lesson_1_task_5.dart';
+import 'task_1.dart';
+import 'task_2.dart';
+import 'task_3.dart';
+import 'task_4.dart';
 
 void main() {
-  group("l05h01", () => runTestLesson1Task1());
-  group("l05h02", () => runTestLesson1Task2());
-  group("l05h03", () => runTestLesson1Task3());
-  group("l05h04", () => runTestLesson1Task4());
-  group("l05h05", () => runTestLesson1Task5());
+  group("l06h01", () => runTestLesson2Task1());
+  group("l06h02", () => runTestLesson2Task2());
+  group("l06h03", () => runTestLesson2Task3());
+  group("l06h04", () => runTestLesson2Task4());
 }

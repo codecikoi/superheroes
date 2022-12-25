@@ -133,12 +133,12 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.noFavorites:
             return NoFavoritesContent();
           case MainPageState.favorites:
-            return SuperheroList(
+            return SuperheroesList(
               title: 'Your favorites',
               stream: bloc.observeFavoriteSuperheroes(),
             );
           case MainPageState.searchResults:
-            return SuperheroList(
+            return SuperheroesList(
               title: 'Search results',
               stream: bloc.observeSearchedSuperheroes(),
             );
@@ -162,11 +162,11 @@ class MainPageStateWidget extends StatelessWidget {
   }
 }
 
-class SuperheroList extends StatelessWidget {
+class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
 
-  const SuperheroList({
+  const SuperheroesList({
     Key? key,
     required this.title,
     required this.stream,
