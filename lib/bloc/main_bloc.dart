@@ -69,6 +69,18 @@ class MainBloc {
     );
   }
 
+  void removeFavorite() {
+    final List<SuperheroInfo> currentFavorites =
+        favoriteSuperheroesSubject.value;
+    if (currentFavorites.isEmpty) {
+      favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
+    } else {
+      favoriteSuperheroesSubject.add(
+        currentFavorites.sublist(0, currentFavorites.length - 1),
+      );
+    }
+  }
+
   Stream<List<SuperheroInfo>> observeFavoriteSuperheroes() =>
       favoriteSuperheroesSubject;
   Stream<List<SuperheroInfo>> observeSearchedSuperheroes() =>
@@ -76,7 +88,10 @@ class MainBloc {
 
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
-    return SuperheroInfo.mocked;
+    return SuperheroInfo.mocked
+        .where((superheroInfo) =>
+            superheroInfo.name.toLowerCase().contains(text.toLowerCase()))
+        .toList();
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
@@ -138,7 +153,7 @@ class SuperheroInfo {
           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
     ),
     SuperheroInfo(
-      name: 'ironman',
+      name: 'Ironman',
       realName: 'Tony Stark',
       imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
     ),

@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
@@ -68,18 +69,32 @@ class SearchWidget extends StatefulWidget {
 class _SearchWidgetState extends State<SearchWidget> {
   final TextEditingController controller = TextEditingController();
 
+  bool haveSearchedText = false;
+
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() => bloc.updateText(controller.text));
+
+      controller.addListener(() {
+        bloc.updateText(controller.text);
+        final haveText = controller.text.isNotEmpty;
+        if (haveSearchedText != haveText) {
+          setState(() {
+            haveSearchedText = haveText;
+          });
+        }
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      textInputAction: TextInputAction.search,
+      cursorColor: Colors.white,
+      textCapitalization: TextCapitalization.words,
       controller: controller,
       style: TextStyle(
         fontWeight: FontWeight.w400,
@@ -87,6 +102,13 @@ class _SearchWidgetState extends State<SearchWidget> {
         color: Colors.white,
       ),
       decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: Colors.white,
+            width: 2.0,
+          ),
+        ),
         filled: true,
         fillColor: SuperheroesColors.indigo75,
         isDense: true,
@@ -107,7 +129,13 @@ class _SearchWidgetState extends State<SearchWidget> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
-          borderSide: BorderSide(color: Colors.white24),
+          borderSide: haveSearchedText
+              ? BorderSide(
+                  color: Colors.white,
+                )
+              : BorderSide(
+                  color: Colors.white24,
+                ),
         ),
       ),
     );
@@ -131,11 +159,33 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return MinSymbolsText();
           case MainPageState.noFavorites:
-            return NoFavoritesContent();
+            return Stack(
+              children: [
+                NoFavoritesContent(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ActionButton(
+                    text: 'remove',
+                    onTap: bloc.removeFavorite,
+                  ),
+                ),
+              ],
+            );
           case MainPageState.favorites:
-            return SuperheroesList(
-              title: 'Your favorites',
-              stream: bloc.observeFavoriteSuperheroes(),
+            return Stack(
+              children: [
+                SuperheroesList(
+                  title: 'Your favorites',
+                  stream: bloc.observeFavoriteSuperheroes(),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ActionButton(
+                    text: 'remove',
+                    onTap: bloc.removeFavorite,
+                  ),
+                ),
+              ],
             );
           case MainPageState.searchResults:
             return SuperheroesList(
@@ -182,6 +232,7 @@ class SuperheroesList extends StatelessWidget {
         }
         final List<SuperheroInfo> superheroes = snapshot.data!;
         return ListView.separated(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           itemCount: superheroes.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0) {
@@ -206,9 +257,6 @@ class SuperheroesList extends StatelessWidget {
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: SuperheroCard(
-                name: item.name,
-                realName: item.realName,
-                imageUrl: item.imageUrl,
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -216,6 +264,7 @@ class SuperheroesList extends StatelessWidget {
                     ),
                   );
                 },
+                superheroInfo: item,
               ),
             );
           },

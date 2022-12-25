@@ -40,9 +40,7 @@ Future<void> testOneSuperhero(
   await tester.pumpWidget(MaterialApp(
     home: SuperheroCard(
       onTap: () {},
-      name: '',
-      realName: '',
-      imageUrl: '',
+      superheroInfo: superheroInfo,
     ),
   ));
   expect(
