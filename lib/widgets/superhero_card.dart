@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 
@@ -24,8 +25,8 @@ class SuperheroCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Image.network(
-              superheroInfo.imageUrl,
+            CachedNetworkImage(
+              imageUrl: superheroInfo.imageUrl,
               width: 70.0,
               fit: BoxFit.cover,
             ),
