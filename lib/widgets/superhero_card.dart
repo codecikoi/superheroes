@@ -33,32 +33,44 @@ class SuperheroCard extends StatelessWidget {
                 imageUrl: superheroInfo.imageUrl,
                 width: 70.0,
                 fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, url, progress) {
+                  return Container(
+                    alignment: Alignment.center,
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      color: SuperheroesColors.blue,
+                      value: progress.progress,
+                    ),
+                  );
+                },
               ),
             ),
             SizedBox(width: 12.0),
             Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  superheroInfo.name.toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    superheroInfo.name.toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16.0,
+                    ),
                   ),
-                ),
-                Text(
-                  superheroInfo.realName,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.0,
-                  ),
-                )
-              ],
-            ))
+                  Text(
+                    superheroInfo.realName,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.0,
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),
