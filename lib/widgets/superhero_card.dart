@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
+import 'package:superheroes/resources/superheroes_images.dart';
 
 import '../bloc/main_bloc.dart';
 
@@ -41,6 +42,16 @@ class SuperheroCard extends StatelessWidget {
                     child: CircularProgressIndicator(
                       color: SuperheroesColors.blue,
                       value: progress.progress,
+                    ),
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  return Center(
+                    child: Image.asset(
+                      SuperheroesImages.unknown,
+                      height: 62.0,
+                      width: 20.0,
+                      fit: BoxFit.cover,
                     ),
                   );
                 },
