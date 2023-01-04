@@ -5,7 +5,7 @@ import 'package:superheroes/model/server_image.dart';
 
 part 'superhero.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class Superhero {
   final String name;
   final Biography biography;
