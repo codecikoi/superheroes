@@ -21,16 +21,13 @@ class MainBloc {
   static const minSymbols = 3;
 
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
-
-  final favoriteSuperheroesSubject =
-      BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
-
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
-
   final currentTextSubject = BehaviorSubject<String>.seeded("");
+
 
   StreamSubscription? textSubscription;
   StreamSubscription? searchSubscription;
+  StreamSubscription? removeFromFavoriteSubscription0;
 
   http.Client? client;
 
