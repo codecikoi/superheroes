@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:superheroes/exception/api_exception.dart';
+import 'package:superheroes/favorite_superheroes_storage.dart';
 import 'package:superheroes/model/superhero.dart';
 
 enum MainPageState {
@@ -24,20 +25,17 @@ class MainBloc {
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
-
   StreamSubscription? textSubscription;
   StreamSubscription? searchSubscription;
-  StreamSubscription? removeFromFavoriteSubscription0;
+  StreamSubscription? removeFromFavoriteSubscription;
 
   http.Client? client;
 
   MainBloc({this.client}) {
-    stateSubject.add(MainPageState.noFavorites);
-
     textSubscription =
-        Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+        Rx.combineLatest2<String, List<Superhero>, MainPageStateInfo>(
       currentTextSubject.distinct().debounceTime(Duration(milliseconds: 500)),
-      favoriteSuperheroesSubject,
+      FavoriteSuperheroesStorage.getInstance().observeFavoriteSuperheroes(),
       (searchedText, favorites) =>
           MainPageStateInfo(searchedText, favorites.isNotEmpty),
     ).listen((value) {
@@ -74,16 +72,18 @@ class MainBloc {
     );
   }
 
-  void removeFavorite() {
-    final List<SuperheroInfo> currentFavorites =
-        favoriteSuperheroesSubject.value;
-    if (currentFavorites.isEmpty) {
-      favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
-    } else {
-      favoriteSuperheroesSubject.add(
-        currentFavorites.sublist(0, currentFavorites.length - 1),
-      );
-    }
+  void removeFromFavorites(final String id) {
+    removeFromFavoriteSubscription?.cancel();
+    removeFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
+        .removeFromFavorites(id)
+        .asStream()
+        .listen(
+      (event) {
+        print('removed from favorites: $event');
+      },
+      onError: (error, stackTrace) =>
+          print('error happened in removefromfavorites: $error, $stackTrace'),
+    );
   }
 
   void retry() {
@@ -91,8 +91,16 @@ class MainBloc {
     searchForSuperheroes(currentText);
   }
 
-  Stream<List<SuperheroInfo>> observeFavoriteSuperheroes() =>
-      favoriteSuperheroesSubject;
+  Stream<List<SuperheroInfo>> observeFavoriteSuperheroes() {
+    return FavoriteSuperheroesStorage.getInstance()
+        .observeFavoriteSuperheroes()
+        .map((superheroes) {
+      return superheroes.map((superhero) =>
+          SuperheroInfo.fromSuperhero(superhero)).toList();
+    });
+  }
+
+
   Stream<List<SuperheroInfo>> observeSearchedSuperheroes() =>
       searchedSuperheroesSubject;
 
@@ -146,11 +154,13 @@ class MainBloc {
 
   void dispose() {
     stateSubject.close();
-    favoriteSuperheroesSubject.close();
     searchedSuperheroesSubject.close();
     currentTextSubject.close();
+
     textSubscription?.cancel();
+    searchSubscription?.cancel();
     client?.close();
+    removeFromFavoriteSubscription?.cancel();
   }
 }
 
