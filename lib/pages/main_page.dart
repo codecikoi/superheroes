@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
-import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 import '../bloc/main_bloc.dart';
@@ -199,35 +198,13 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return MinSymbolsText();
           case MainPageState.noFavorites:
-            return Stack(
-              children: [
-                NoFavoritesContent(
-                  searchFieldFocusNode: searchFieldFocusNode,
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ActionButton(
-                    text: 'remove',
-                    onTap: bloc.removeFavorite,
-                  ),
-                ),
-              ],
+            return NoFavoritesContent(
+              searchFieldFocusNode: searchFieldFocusNode,
             );
           case MainPageState.favorites:
-            return Stack(
-              children: [
-                SuperheroesList(
-                  title: 'Your favorites',
-                  stream: bloc.observeFavoriteSuperheroes(),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ActionButton(
-                    text: 'remove',
-                    onTap: bloc.removeFavorite,
-                  ),
-                ),
-              ],
+            return SuperheroesList(
+              title: 'Your favorites',
+              stream: bloc.observeFavoriteSuperheroes(),
             );
           case MainPageState.searchResults:
             return SuperheroesList(
