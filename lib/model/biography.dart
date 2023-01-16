@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'alignment_info.dart';
+
 part 'biography.g.dart';
 
 @JsonSerializable()
@@ -20,4 +22,6 @@ class Biography {
       _$BiographyFromJson(json);
 
   Map<String, dynamic> toJson() => _$BiographyToJson(this);
+
+  AlignmentInfo? get alignmentInfo => AlignmentInfo.fromAlignment(alignment);
 }

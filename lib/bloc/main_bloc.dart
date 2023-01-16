@@ -8,6 +8,8 @@ import 'package:superheroes/exception/api_exception.dart';
 import 'package:superheroes/favorite_superheroes_storage.dart';
 import 'package:superheroes/model/superhero.dart';
 
+import '../model/alignment_info.dart';
+
 enum MainPageState {
   noFavorites,
   minSymbols,
@@ -95,11 +97,11 @@ class MainBloc {
     return FavoriteSuperheroesStorage.getInstance()
         .observeFavoriteSuperheroes()
         .map((superheroes) {
-      return superheroes.map((superhero) =>
-          SuperheroInfo.fromSuperhero(superhero)).toList();
+      return superheroes
+          .map((superhero) => SuperheroInfo.fromSuperhero(superhero))
+          .toList();
     });
   }
-
 
   Stream<List<SuperheroInfo>> observeSearchedSuperheroes() =>
       searchedSuperheroesSubject;
@@ -117,16 +119,13 @@ class MainBloc {
     final decoded = json.decode(response.body);
     if (decoded['response'] == 'success') {
       final List<dynamic> results = decoded['results'];
+
       final List<Superhero> superheroes = results
           .map((rawSuperhero) => Superhero.fromJson(rawSuperhero))
           .toList();
+
       final List<SuperheroInfo> found = superheroes.map((superhero) {
-        return SuperheroInfo(
-          name: superhero.name,
-          realName: superhero.biography.fullName,
-          imageUrl: superhero.image.url,
-          id: superhero.id,
-        );
+        return SuperheroInfo.fromSuperhero(superhero);
       }).toList();
       return found;
     } else if (decoded['response'] == 'error') {
@@ -156,7 +155,6 @@ class MainBloc {
     stateSubject.close();
     searchedSuperheroesSubject.close();
     currentTextSubject.close();
-
     textSubscription?.cancel();
     searchSubscription?.cancel();
     client?.close();
@@ -169,13 +167,25 @@ class SuperheroInfo {
   final String name;
   final String realName;
   final String imageUrl;
+  final AlignmentInfo? alignmentInfo;
 
   SuperheroInfo({
     required this.name,
     required this.id,
     required this.realName,
     required this.imageUrl,
+    this.alignmentInfo,
   });
+
+  factory SuperheroInfo.fromSuperhero(final Superhero superhero) {
+    return SuperheroInfo(
+      id: superhero.id,
+      name: superhero.name,
+      realName: superhero.biography.fullName,
+      imageUrl: superhero.image.url,
+      alignmentInfo: superhero.biography.alignmentInfo,
+    );
+  }
 
   @override
   String toString() {

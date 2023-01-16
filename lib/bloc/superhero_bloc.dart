@@ -20,7 +20,10 @@ class SuperheroBloc {
   StreamSubscription? addToFavoriteSubscription;
   StreamSubscription? removeFromFavoriteSubscription;
 
-  SuperheroBloc(this.client, {required this.id}) {
+  SuperheroBloc({
+    this.client,
+    required this.id,
+  }) {
     getFromFavorites();
   }
 
@@ -53,7 +56,7 @@ class SuperheroBloc {
         .addFavorites(superhero)
         .asStream()
         .listen(
-          (event) {
+      (event) {
         print('added to favorite: $event');
       },
       onError: (error, stackTrace) =>
@@ -61,36 +64,39 @@ class SuperheroBloc {
     );
   }
 
-
   void removeFromFavorites() {
     removeFromFavoriteSubscription?.cancel();
-    removeFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance().removeFromFavorites(id).asStream().listen((event) {
-      print('removed from favorites: $event');
-    },
+    removeFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
+        .removeFromFavorites(id)
+        .asStream()
+        .listen(
+      (event) {
+        print('removed from favorites: $event');
+      },
       onError: (error, stackTrace) =>
           print('error happened in removefromFavorites: $error, $stackTrace'),
-
     );
   }
 
-  Stream<bool> observeIsFavorite() => FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
+  Stream<bool> observeIsFavorite() =>
+      FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
   void requestSuperhero() {
     requestSubscription?.cancel();
     requestSubscription = request().asStream().listen(
-        (supehero) {
-          superheroSubject.add(supehero);
-        },
+      (supehero) {
+        superheroSubject.add(supehero);
+      },
       onError: (error, stackTrace) {
-          print('error happened in requestSuperhero: $error, $stackTrace'),
-  },
+        print('error happened in requestSuperhero: $error, $stackTrace');
+      },
     );
+  }
 
-}
-
-Future<Superhero> request() async {
+  Future<Superhero> request() async {
     final token = dotenv.env['SUPERHERO_TOKEN'];
-    final response = await (client ??= http.Client()).get(Uri.parse('https://superheroapi.com/api/$token/$id'));
+    final response = await (client ??= http.Client())
+        .get(Uri.parse('https://superheroapi.com/api/$token/$id'));
     if (response.statusCode >= 500 && response.statusCode <= 599) {
       throw ApiException(message: 'Server error happened');
     }
@@ -101,7 +107,7 @@ Future<Superhero> request() async {
     if (decoded['response'] == 'success') {
       return Superhero.fromJson(decoded);
     } else if (decoded['response'] == 'error') {
-      throw ApiException(message: 'client error happened')
+      throw ApiException(message: 'client error happened');
     }
     throw Exception('unknown error happened');
   }

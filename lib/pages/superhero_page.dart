@@ -32,7 +32,10 @@ class _SuperheroPageState extends State<SuperheroPage> {
   @override
   void initState() {
     super.initState();
-    bloc = SuperheroBloc(client: widget.client, id: widget.id);
+    bloc = SuperheroBloc(
+      client: widget.client,
+      id: widget.id,
+    );
   }
 
   @override
@@ -85,13 +88,13 @@ class SuperheroContentPage extends StatelessWidget {
   }
 }
 
-
-
 class SuperheroAppBar extends StatelessWidget {
-
   final Superhero superhero;
 
-  const SuperheroAppBar({Key? key, required this.superhero,}) : super(key: key);
+  const SuperheroAppBar({
+    Key? key,
+    required this.superhero,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +103,9 @@ class SuperheroAppBar extends StatelessWidget {
       pinned: true,
       floating: true,
       expandedHeight: 348,
-      actions: [FavoriteButton(),],
+      actions: [
+        FavoriteButton(),
+      ],
       backgroundColor: SuperheroesColors.background,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
@@ -121,7 +126,6 @@ class SuperheroAppBar extends StatelessWidget {
   }
 }
 
-
 class FavoriteButton extends StatelessWidget {
   const FavoriteButton({Key? key}) : super(key: key);
 
@@ -132,23 +136,28 @@ class FavoriteButton extends StatelessWidget {
       stream: bloc.observeIsFavorite(),
       initialData: false,
       builder: (context, snapshot) {
-        final favorite = !snapshot.hasData || snapshot.data == null || snapshot.data!;
+        final favorite =
+            !snapshot.hasData || snapshot.data == null || snapshot.data!;
         return GestureDetector(
-          onTap: () => favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
+          onTap: () =>
+              favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
           child: Container(
             height: 52,
             width: 52,
             alignment: Alignment.center,
-            child: Image.asset(favorite ? SuperheroesIcons.starFilled : SuperheroesIcons.starEmpty,height: 32, width: 32,),
-
+            child: Image.asset(
+              favorite
+                  ? SuperheroesIcons.starFilled
+                  : SuperheroesIcons.starEmpty,
+              height: 32,
+              width: 32,
+            ),
           ),
-        )
+        );
       },
-
     );
   }
 }
-
 
 class PowerstatsWidget extends StatelessWidget {
   final Powerstats powerstats;
@@ -241,39 +250,47 @@ class PowerstatsWidget extends StatelessWidget {
   }
 }
 
-
 class PowerstatWidget extends StatelessWidget {
-   final String name;
-   final double value;
+  final String name;
+  final double value;
 
-  const PowerstatWidget({Key? key, required this.name, required this.value,}) : super(key: key);
+  const PowerstatWidget({
+    Key? key,
+    required this.name,
+    required this.value,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        ArcWidget(color: calculateColorByValue(), value: value),
-        Padding(padding: EdgeInsets.only(top: 17.0),
-        child: Text(
-          '${(value = 100).toInt()}',
-          style: TextStyle(
-            color: calculateColorByValue(),
-            fontWeight: FontWeight.w800,
-            fontSize: 38.0,
+        ArcWidget(
+          color: calculateColorByValue(),
+          value: value,
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 17.0),
+          child: Text(
+            '${(value * 100).toInt()}',
+            style: TextStyle(
+              color: calculateColorByValue(),
+              fontWeight: FontWeight.w800,
+              fontSize: 38.0,
+            ),
           ),
         ),
-        ),
-        Padding(padding: EdgeInsets.only(top: 17.0),
-        child: Text(
-    name.toUpperCase(),          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: 12.0,
+        Padding(
+          padding: EdgeInsets.only(top: 17.0),
+          child: Text(
+            name.toUpperCase(),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 12.0,
+            ),
           ),
-        ),),
-
-
+        ),
       ],
     );
   }
@@ -281,65 +298,72 @@ class PowerstatWidget extends StatelessWidget {
   Color calculateColorByValue() {
     if (value == 0.5) {
       return Color.lerp(Colors.red, Colors.orangeAccent, value / 0.5)!;
-    } else return Color.lerp(Colors.orangeAccent, Colors.green, (value - 0.5) / 0.5)!;
+    } else
+      return Color.lerp(
+          Colors.orangeAccent, Colors.green, (value - 0.5) / 0.5)!;
   }
 }
 
 class ArcWidget extends StatelessWidget {
-
   final double value;
   final Color color;
 
-  const ArcWidget({Key? key, required this.value, required this.color,}) : super(key: key);
+  const ArcWidget({
+    Key? key,
+    required this.value,
+    required this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: ArcCustomPainter(value, color),
-          size: Size(66, 33,
-      ),
+      size: Size(66, 33),
     );
   }
 }
 
-class ArcCustomPainter extends CustomPainter{
+class ArcCustomPainter extends CustomPainter {
   final double value;
   final Color color;
 
   ArcCustomPainter(
-      this.color,
-      this.value
-      );
+    this.value,
+    this.color,
+  );
 
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height * 2,);
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height * 2);
     final backgroundPaint = Paint()
-    ..color = Colors.white24
-    ..style = PaintingStyle.stroke
-    ..strokeCap = StrokeCap.round
-    ..strokeWidth = 6;
+      ..color = Colors.white24
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 6;
     final paint = Paint()
-    ..color = color
-    ..style = PaintingStyle.stroke
-    ..strokeCap = StrokeCap.round
-    ..strokeWidth = 6;
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 6;
     canvas.drawArc(rect, pi, pi, false, backgroundPaint);
-    canvas.drawArc(rect, pi, pi * 2, false, paint);
-}
+    canvas.drawArc(rect, pi, pi * value, false, paint);
+  }
 
-@override
-    bool shouldRepaint(covariant CustomPainter oldDelegate) {
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
     if (oldDelegate is ArcCustomPainter) {
       return oldDelegate.value != value && oldDelegate.color != color;
     }
     return true;
-}
+  }
 }
 
 class BiographyWidget extends StatelessWidget {
   final Biography biography;
-  const BiographyWidget({Key? key, required this.biography,}) : super(key: key);
+  const BiographyWidget({
+    Key? key,
+    required this.biography,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -355,8 +379,3 @@ class BiographyWidget extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
