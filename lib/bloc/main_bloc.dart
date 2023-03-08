@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:superheroes/exception/api_exception.dart';
 import 'package:superheroes/favorite_superheroes_storage.dart';
 import 'package:superheroes/model/superhero.dart';
-
 import '../model/alignment_info.dart';
+
 
 enum MainPageState {
   noFavorites,
@@ -19,6 +18,7 @@ enum MainPageState {
   searchResults,
   favorites,
 }
+
 
 class MainBloc {
   static const minSymbols = 3;

@@ -256,43 +256,92 @@ class SuperheroesList extends StatelessWidget {
           itemCount: superheroes.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16.0,
-                  top: 90,
-                  bottom: 12.0,
-                ),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              );
+              return ListTitleWidget(title: title);
             }
             final SuperheroInfo item = superheroes[index - 1];
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: SuperheroCard(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SuperheroPage(id: item.name),
-                    ),
-                  );
-                },
-                superheroInfo: item,
-              ),
-            );
+            return ListTile(superhero: item);
           },
           separatorBuilder: (BuildContext context, int index) {
             return SizedBox(height: 8.0);
           },
         );
       },
+    );
+  }
+}
+
+class ListTile extends StatelessWidget {
+  final SuperheroInfo superhero;
+
+  const ListTile({
+    Key? key,
+    required this.superhero,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Dismissible(
+        key: ValueKey(superhero.id),
+        child: SuperheroCard(
+          superheroInfo: superhero,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SuperheroPage(id: superhero.id),
+              ),
+            );
+          },
+        ),
+        background: Container(
+          height: 70,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: SuperheroesColors.red,
+          ),
+          child: Text(
+            'remove from favorites'.toUpperCase(),
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
+      ),
+    );
+  }
+}
+
+class ListTitleWidget extends StatelessWidget {
+  const ListTitleWidget({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16.0,
+        top: 90,
+        bottom: 12.0,
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 24,
+          color: Colors.white,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
     );
   }
 }
