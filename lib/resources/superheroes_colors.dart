@@ -10,5 +10,6 @@ class SuperheroesColors {
   static const indigo75 = Color(0xbf2C3243);
   static const red = Color(0xff961818);
   static const grey = Color(0xff727272);
+  static const secondaryGrey = Color(0xff999999);
   static const green = Color(0xff2aab6a);
 }
